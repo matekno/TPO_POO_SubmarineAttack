@@ -15,7 +15,7 @@ public class Juego {
 
     public Juego() {
         submarino = new Submarino(ANCHO_MUNDO);
-        nivel = new Nivel(new Random());
+        nivel = new Nivel(new BarcoFactory(new Random(), ANCHO_MUNDO));
         barcos = new ArrayList<>();
     }
 
@@ -25,7 +25,7 @@ public class Juego {
 
         nivel.avanzar(segundos);
         if (nivel.puedeSalirBarco(barcos.size())) {
-            barcos.add(nivel.crearBarco(ANCHO_MUNDO));
+            barcos.add(nivel.crearBarco());
         }
     }
 

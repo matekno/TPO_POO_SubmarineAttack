@@ -6,17 +6,16 @@ public class Nivel {
     private static final int BARCOS_POR_SERIE = 12;
     private static final int MAXIMO_BARCOS_EN_PANTALLA = 3;
     private static final double DEMORA_ENTRE_BARCOS = 1.5; // segundos
-    private static final double VELOCIDAD_BARCOS = 150; // metros por segundo
-    private static final int MAXIMO_PASADAS = 3;
+    
 
-    private final Random random;
     private int barcosPorSalir;
     private double tiempoParaProximoBarco;
+    private BarcoFactory barcoFactory;
 
-    public Nivel(Random random) {
-        this.random = random;
+    public Nivel(BarcoFactory barcoFactory) {
         barcosPorSalir = BARCOS_POR_SERIE;
         tiempoParaProximoBarco = DEMORA_ENTRE_BARCOS;
+        this.barcoFactory = barcoFactory;
     }
 
     public void avanzar(double segundos) {
@@ -29,12 +28,11 @@ public class Nivel {
                 && tiempoParaProximoBarco <= 0;
     }
 
-    public Barco crearBarco(double anchoMundo) {
+    public Barco crearBarco() {
         barcosPorSalir--;
         tiempoParaProximoBarco = DEMORA_ENTRE_BARCOS;
-        boolean desdeIzquierda = random.nextBoolean();
-        int pasadas = 1 + random.nextInt(MAXIMO_PASADAS);
-        // System.out.println("Sale un barco nuevo. Quedan por salir: " + barcosPorSalir);
-        return new Barco(anchoMundo, desdeIzquierda, VELOCIDAD_BARCOS, pasadas);
+        Barco barco = this.barcoFactory.crearBarco();
+        System.out.println("Sale un barco nuevo. Quedan por salir: " + barcosPorSalir);
+        return barco;
     }
 }
