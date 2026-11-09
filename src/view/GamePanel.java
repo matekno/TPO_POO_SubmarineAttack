@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import controller.JuegoController;
+import dto.CargaDTO;
 import dto.ElementoDTO;
 
 public class GamePanel extends JPanel {
@@ -30,6 +32,10 @@ public class GamePanel extends JPanel {
 	private JLabel lblBarco2;
 	private JLabel lblBarco3;
 	private JLabel[] lblBarcos;
+	
+	private final ImageIcon imagenCarga = new ImageIcon(GamePanel.class.getResource("/img/carga.png"));
+	private final ImageIcon imagenExplosion = new ImageIcon(GamePanel.class.getResource("/img/explosion.png"));
+	private final List<JLabel> lblCargas = new ArrayList<>();
 
 	/**
 	 * Create the panel.
@@ -76,10 +82,17 @@ public class GamePanel extends JPanel {
 		lblBarco3.setBounds(0, 0, 96, 32);
 		add(lblBarco3);
 
+		
+		
 		JPanel panelCielo = new JPanel();
 		panelCielo.setBackground(new Color(135, 206, 235));
 		panelCielo.setBounds(0, 0, 800, 40);
 		add(panelCielo);
+		
+		JPanel panelPrimeraProfundidad = new JPanel();
+		panelPrimeraProfundidad.setBackground(new Color(71, 142, 255));
+		panelPrimeraProfundidad.setBounds(0, 40, 800, 228);
+		add(panelPrimeraProfundidad);
 
 	}
 
@@ -100,6 +113,7 @@ public class GamePanel extends JPanel {
 		controller.avanzar(segundos);
 		ubicar(lblSubmarino, controller.getSubmarino());
 		actualizarBarcos(controller.getBarcos());
+		actualizarCargas(controller.getCargas());
 
 	}
 
@@ -116,6 +130,32 @@ public class GamePanel extends JPanel {
 				lblBarcos[i].setVisible(true);
 			} else {
 				lblBarcos[i].setVisible(false);
+			}
+		}
+	}
+	
+	private void actualizarCargas(List<CargaDTO> cargas) {
+		// Si hay mas cargas que labels, se crean los que faltan
+		while (lblCargas.size() < cargas.size()) {
+			JLabel label = new JLabel(imagenCarga);
+			label.setSize(imagenCarga.getIconWidth(), imagenCarga.getIconHeight());
+			add(label, 0); // indice 0: se dibuja por encima de los demas componentes
+			lblCargas.add(label);
+		}
+
+		for (int i = 0; i < lblCargas.size(); i++) {
+			JLabel label = lblCargas.get(i);
+			if (i < cargas.size()) {
+				CargaDTO carga = cargas.get(i);
+				if (carga.isExplotada()) {
+					label.setIcon(imagenExplosion);
+				} else {
+					label.setIcon(imagenCarga);
+				}
+				ubicar(label, carga);
+				label.setVisible(true);
+			} else {
+				label.setVisible(false);
 			}
 		}
 	}

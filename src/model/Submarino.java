@@ -8,7 +8,7 @@ public class Submarino extends ElementoJuego {
 	public static final double PROFUNDIDAD_MAXIMA = 800;
 	private static final double ANCHO = 100;
 	private static final double ALTO = 30;
-	private static double VELOCIDAD = 200; // metros por segundo
+	private static final double VELOCIDAD = 200; // metros por segundo
 
 	private final double anchoMundo;
 

@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Random;
-
 public class Nivel {
     private static final int BARCOS_POR_SERIE = 12;
     private static final int MAXIMO_BARCOS_EN_PANTALLA = 3;

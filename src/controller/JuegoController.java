@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dto.CargaDTO;
 import dto.ElementoDTO;
 import model.Barco;
+import model.Carga;
 import model.Direccion;
 import model.ElementoJuego;
 import model.Juego;
@@ -57,5 +59,14 @@ public class JuegoController {
 
 	private ElementoDTO crearDTO(ElementoJuego elemento) {
 		return new ElementoDTO(elemento.getX(), elemento.getY(), elemento.getAncho(), elemento.getAlto());
+	}
+
+	public List<CargaDTO> getCargas() {
+		List<CargaDTO> cargas = new ArrayList<>();
+		for (Carga carga : juego.getCargas()) {
+			cargas.add(
+					new CargaDTO(carga.getX(), carga.getY(), carga.getAncho(), carga.getAlto(), carga.estaExplotada()));
+		}
+		return cargas;
 	}
 }

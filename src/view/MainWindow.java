@@ -24,8 +24,8 @@ public class MainWindow extends JFrame {
 					MainWindow frame = new MainWindow();
 					frame.pack(); // Ajusta al tamano adecuado. Esto cuando lo haga responsive vuela.
 					frame.setLocationRelativeTo(null);
-					frame.iniciarJuego(new JuegoController());
 					frame.setVisible(true);
+					frame.iniciarJuego(new JuegoController());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
