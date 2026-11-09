@@ -9,8 +9,13 @@ public class Submarino extends ElementoJuego {
 	private static final double ANCHO = 100;
 	private static final double ALTO = 30;
 	private static final double VELOCIDAD = 200; // metros por segundo
+	
+	private static final int VIDA_MAXIMA = 100;
+	private static final int VIDAS_INICIALES = 3;
 
 	private final double anchoMundo;
+	private int vida; // porcentaje, de 0 a 100
+	private int vidas;
 
 	// La idea para el mecanismo de movimiento del submarino es la siguiente: Se
 	// tienen los 4 puntos a donde puede moverse en un enum (Direccion).
@@ -40,6 +45,8 @@ public class Submarino extends ElementoJuego {
 	public Submarino(double anchoMundo) {
 		super(anchoMundo / 2, (PROFUNDIDAD_MINIMA + PROFUNDIDAD_MAXIMA) / 2, ANCHO, ALTO);
 		this.anchoMundo = anchoMundo;
+		this.vida = VIDA_MAXIMA;
+		this.vidas = VIDAS_INICIALES;
 	}
 
 	public void empezarAMover(Direccion direccion) {
@@ -64,5 +71,36 @@ public class Submarino extends ElementoJuego {
 
 	private double limitar(double valor, double minimo, double maximo) {
 		return Math.max(minimo, Math.min(valor, maximo));
+	}
+	
+	// Submarino es responsable de afectar sus propia salud segun las explosiones que van pasando.
+	public RangoImpacto recibirExplosion(double explosionX, double explosionY) {
+		RangoImpacto rango = RangoImpacto.segunDistancia(distanciaA(explosionX, explosionY));
+		if (rango.pierdeVida()) {
+			perderVida();
+		} else {
+			vida -= rango.getPorcentajeDano();
+			if (vida <= 0) {
+				perderVida();
+			}
+		}
+		return rango;
+	}
+
+	public void ganarVida() {
+		vidas++;
+	}
+
+	private void perderVida() {
+		vidas--;
+		vida = VIDA_MAXIMA;
+	}
+
+	public int getVida() {
+		return vida;
+	}
+
+	public int getVidas() {
+		return vidas;
 	}
 }

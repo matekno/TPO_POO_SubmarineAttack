@@ -1,10 +1,10 @@
 package model;
 
 public class Carga extends ElementoJuego {
-	public static final double DETONADOR_MINIMO = 300; // Alturas en Y.
+	public static final double DETONADOR_MINIMO = 300; // Alturas en Y (o mejor dicho profundidad).
 	public static final double DETONADOR_MAXIMO = 700;
-	private static final double ANCHO = 30;
-	private static final double ALTO = 30;
+	private static final double ANCHO = 16; // Esta es la hitbox de la carga.
+	private static final double ALTO = 16;
 	private static final double DURACION_EXPLOSION = 0.5; // segundos que se ve la explosion
 
 	private final double velocidadCaida;

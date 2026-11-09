@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.event.KeyEvent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,8 @@ import model.Carga;
 import model.Direccion;
 import model.ElementoJuego;
 import model.Juego;
+
+import event.IJuegoListener;
 
 public class JuegoController {
 	private final Juego juego;
@@ -68,5 +71,9 @@ public class JuegoController {
 					new CargaDTO(carga.getX(), carga.getY(), carga.getAncho(), carga.getAlto(), carga.estaExplotada()));
 		}
 		return cargas;
+	}
+	
+	public void agregarJuegoListener(IJuegoListener listener) {
+		juego.agregarListener(listener);
 	}
 }

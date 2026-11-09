@@ -15,15 +15,15 @@ import javax.swing.Timer;
 import controller.JuegoController;
 import dto.CargaDTO;
 import dto.ElementoDTO;
+import event.IJuegoListener;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements IJuegoListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final double ESCALA = 0.8; // píxeles por metro
-    private static final int SUPERFICIE = 40; // píxeles de cielo arriba del agua
+	private static final int SUPERFICIE = 40; // píxeles de cielo arriba del agua
 
-
-	private JLabel lblSubmarino;
+	private LabelConFading lblSubmarino;
 	private JuegoController controller;
 	private Timer timer;
 	private long ultimoTick;
@@ -32,7 +32,7 @@ public class GamePanel extends JPanel {
 	private JLabel lblBarco2;
 	private JLabel lblBarco3;
 	private JLabel[] lblBarcos;
-	
+
 	private final ImageIcon imagenCarga = new ImageIcon(GamePanel.class.getResource("/img/carga.png"));
 	private final ImageIcon imagenExplosion = new ImageIcon(GamePanel.class.getResource("/img/explosion.png"));
 	private final List<JLabel> lblCargas = new ArrayList<>();
@@ -59,7 +59,7 @@ public class GamePanel extends JPanel {
 		setBackground(new Color(0, 51, 102));
 		setLayout(null);
 
-		lblSubmarino = new JLabel("");
+		lblSubmarino = new LabelConFading();
 		lblSubmarino.setIcon(new ImageIcon(GamePanel.class.getResource("/img/submarino.png")));
 		lblSubmarino.setBounds(300, 468, 80, 24);
 		add(lblSubmarino);
@@ -82,13 +82,11 @@ public class GamePanel extends JPanel {
 		lblBarco3.setBounds(0, 0, 96, 32);
 		add(lblBarco3);
 
-		
-		
 		JPanel panelCielo = new JPanel();
 		panelCielo.setBackground(new Color(135, 206, 235));
 		panelCielo.setBounds(0, 0, 800, 40);
 		add(panelCielo);
-		
+
 		JPanel panelPrimeraProfundidad = new JPanel();
 		panelPrimeraProfundidad.setBackground(new Color(71, 142, 255));
 		panelPrimeraProfundidad.setBounds(0, 40, 800, 228);
@@ -111,34 +109,33 @@ public class GamePanel extends JPanel {
 		ultimoTick = ahora;
 
 		controller.avanzar(segundos);
-		ubicar(lblSubmarino, controller.getSubmarino());
+		posicionarElemento(lblSubmarino, controller.getSubmarino());
 		actualizarBarcos(controller.getBarcos());
 		actualizarCargas(controller.getCargas());
 
 	}
 
-	private void ubicar(JLabel label, ElementoDTO elemento) {
-		int x = (int) ((elemento.getX() - elemento.getAncho() / 2) * ESCALA);
-		int y = (int) ((elemento.getY() - elemento.getAlto() / 2) * ESCALA) + SUPERFICIE;;
+	private void posicionarElemento(JLabel label, ElementoDTO elemento) {
+		int x = (int) (elemento.getX() * ESCALA) - label.getWidth() / 2;
+		int y = (int) (elemento.getY() * ESCALA) + SUPERFICIE - label.getHeight() / 2;
 		label.setLocation(x, y);
 	}
 
 	private void actualizarBarcos(List<ElementoDTO> barcos) {
 		for (int i = 0; i < lblBarcos.length; i++) {
 			if (i < barcos.size()) {
-				ubicar(lblBarcos[i], barcos.get(i));
+				posicionarElemento(lblBarcos[i], barcos.get(i));
 				lblBarcos[i].setVisible(true);
 			} else {
 				lblBarcos[i].setVisible(false);
 			}
 		}
 	}
-	
+
 	private void actualizarCargas(List<CargaDTO> cargas) {
 		// Si hay mas cargas que labels, se crean los que faltan
 		while (lblCargas.size() < cargas.size()) {
-			JLabel label = new JLabel(imagenCarga);
-			label.setSize(imagenCarga.getIconWidth(), imagenCarga.getIconHeight());
+			JLabel label = new JLabel();
 			add(label, 0); // indice 0: se dibuja por encima de los demas componentes
 			lblCargas.add(label);
 		}
@@ -147,16 +144,24 @@ public class GamePanel extends JPanel {
 			JLabel label = lblCargas.get(i);
 			if (i < cargas.size()) {
 				CargaDTO carga = cargas.get(i);
+				ImageIcon imagen;
 				if (carga.isExplotada()) {
-					label.setIcon(imagenExplosion);
+					imagen = imagenExplosion;
 				} else {
-					label.setIcon(imagenCarga);
+					imagen = imagenCarga;
 				}
-				ubicar(label, carga);
+				label.setIcon(imagen);
+				label.setSize(imagen.getIconWidth(), imagen.getIconHeight());
+				posicionarElemento(label, carga);
 				label.setVisible(true);
 			} else {
 				label.setVisible(false);
 			}
 		}
+	}
+	
+	@Override
+	public void submarinoDaniado(int vida, int vidas) {
+		lblSubmarino.hacerFading();
 	}
 }

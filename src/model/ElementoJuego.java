@@ -24,6 +24,13 @@ public abstract class ElementoJuego {
 	public boolean seSuperponeCon(ElementoJuego otro) {
 		return Math.abs(x - otro.x) < (ancho + otro.ancho) / 2 && Math.abs(y - otro.y) < (alto + otro.alto) / 2;
 	}
+	
+	// Distancia desde un punto hasta el borde mas cercano de este elemento (0 si el punto esta adentro)
+	public double distanciaA(double puntoX, double puntoY) {
+		double dx = Math.max(Math.abs(puntoX - x) - ancho / 2, 0);
+		double dy = Math.max(Math.abs(puntoY - y) - alto / 2, 0);
+		return Math.sqrt(dx * dx + dy * dy);
+	}
 
 	public double getX() {
 		return x;

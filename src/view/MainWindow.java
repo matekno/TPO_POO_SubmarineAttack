@@ -1,18 +1,19 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import controller.JuegoController;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
+
+import controller.JuegoController;
 
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private GamePanel gamePanel;
+	private HUDPanel hudPanel;
 
 	/**
 	 * Launch the application.
@@ -48,11 +49,17 @@ public class MainWindow extends JFrame {
 
 		gamePanel = new GamePanel();
 		contentPane.add(gamePanel, BorderLayout.CENTER);
+		
+		hudPanel = new HUDPanel();
+		contentPane.add(hudPanel, BorderLayout.NORTH);
 
 	}
 
 	public void iniciarJuego(JuegoController controller) {
+		controller.agregarJuegoListener(hudPanel);
+		controller.agregarJuegoListener(gamePanel);
 		gamePanel.iniciar(controller);
+
 	}
 
 }
